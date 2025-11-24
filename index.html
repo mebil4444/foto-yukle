@@ -12,10 +12,6 @@
   <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
       min-height: 100vh;
@@ -73,26 +69,25 @@
       <span>Foto Yükle</span>
     </div>
     <p class="note">
-      Kare kutuya dokun, fotoğraf(lar)ını seç. Yükleme bitince hepsi bize ulaşmış olacak.
+      Kare kutuya dokun → Kamera veya Galeriden fotoğraf seç → Yükleme otomatik yapılır.
     </p>
   </div>
 
-  <!-- Gizli Uploadcare input'u -->
+  <!-- Uploadcare input (Sadece Kamera + Galeri aktif) -->
   <input
     type="hidden"
     id="uploader"
     role="uploadcare-uploader"
     data-multiple="true"
     data-images-only="true"
+    data-tabs="file camera"
   />
 
   <script>
-    // Widget'i al
     var widget = uploadcare.Widget('#uploader');
     var box = document.getElementById('uploadBox');
 
     box.addEventListener('click', function () {
-      // Kutuyu tıklayınca upload penceresini aç
       widget.openDialog(null).done(function (fileGroup) {
         box.innerHTML = '<span>Yükleniyor...</span>';
 
