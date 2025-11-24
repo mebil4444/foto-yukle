@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <title>Foto Yükle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Uploadcare public key -->
+  <script>
+    UPLOADCARE_PUBLIC_KEY = '0baea76304733733aa8b';
+  </script>
+  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -19,6 +26,11 @@
       background: #f5f5f5;
     }
 
+    .wrapper {
+      text-align: center;
+      padding: 24px;
+    }
+
     .upload-box {
       width: 260px;
       height: 260px;
@@ -31,9 +43,8 @@
       cursor: pointer;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
       transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease;
-      text-align: center;
       padding: 16px;
-      text-decoration: none;
+      margin: 0 auto 12px;
     }
 
     .upload-box span {
@@ -49,34 +60,47 @@
     }
 
     .note {
-      position: fixed;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: #777;
-      text-align: center;
-      padding: 4px 8px;
+      max-width: 260px;
+      margin: 0 auto;
     }
   </style>
 </head>
 <body>
-  <!--
-    Bu kare kutuya tıklanınca Drive klasörün açılacak.
-    Misafirler Drive içindeki + / Yükle → Fotoğraf diyerek
-    telefon albümünden seçip yükleyecek.
-  -->
-  <a
-    class="upload-box"
-    href="https://drive.google.com/drive/folders/1S3Kd9zagG7XY70ew6LmayvkXApgEulZv?usp=drive_link"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    <span>Foto Yükle</span>
-  </a>
-
-  <div class="note">
-    Kare kutuya dokununca Google Drive klasörü açılır. Oradan “+ / Yükle → Fotoğraf” ile albümünüzden fotoğraf seçebilirsiniz.
+  <div class="wrapper">
+    <div id="uploadBox" class="upload-box">
+      <span>Foto Yükle</span>
+    </div>
+    <p class="note">
+      Kare kutuya dokun, fotoğraf(lar)ını seç. Yükleme bitince hepsi bize ulaşmış olacak.
+    </p>
   </div>
+
+  <!-- Gizli Uploadcare input'u -->
+  <input
+    type="hidden"
+    id="uploader"
+    role="uploadcare-uploader"
+    data-multiple="true"
+    data-images-only="true"
+  />
+
+  <script>
+    // Widget'i al
+    var widget = uploadcare.Widget('#uploader');
+    var box = document.getElementById('uploadBox');
+
+    box.addEventListener('click', function () {
+      // Kutuyu tıklayınca upload penceresini aç
+      widget.openDialog(null).done(function (fileGroup) {
+        box.innerHTML = '<span>Yükleniyor...</span>';
+
+        fileGroup.done(function () {
+          box.innerHTML = '<span>Teşekkürler! 📸</span>';
+        });
+      });
+    });
+  </script>
 </body>
 </html>
